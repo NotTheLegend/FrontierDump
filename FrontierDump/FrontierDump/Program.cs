@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using FrontierDump.data;
 using FrontierDump.structs;
@@ -78,14 +79,14 @@ namespace FrontierDump
                     data.unk2 = reader.ReadByte();
                     data.unk3 = reader.ReadByte();
                     data.unk4 = reader.ReadByte();
-                    data.level = reader.ReadByte();
+                    data.stars = reader.ReadByte() + " Stars";
                     data.unk5 = reader.ReadByte();
                     data.courseType = reader.ReadByte();
                     data.unk7 = reader.ReadByte();
                     data.unk8 = reader.ReadByte();
                     data.unk9 = reader.ReadByte();
                     data.unk10 = reader.ReadByte();
-                    data.unk11 = reader.ReadByte();
+                    data.pCap = GetName(Data.PlayerCap, reader.ReadByte(), "x2");
                     data.fee = reader.ReadInt32();
                     data.zennyMain = reader.ReadInt32();
                     data.zennyKo = reader.ReadInt32();
@@ -101,71 +102,25 @@ namespace FrontierDump
                     data.unk18 = reader.ReadByte();
                     data.fileName = reader.ReadInt16();
                     data.mainGoalType = GetName(Data.Objectives, reader.ReadInt32(), "x8");
-                    switch (data.mainGoalType)
-                    {
-                        case "Hunt":
-                        case "Slay":
-                        case "Slay or Damage":
-                        case "Damage":
-                        case "Capture":
-                        case "Break Part":
-                            data.mainGoalTarget = GetName(Data.Monsters, reader.ReadByte(), "x2");
-                            reader.ReadByte();//Dead Space due to items being 2 bytes
-                            break;
-                        case "Deliver":
-                            data.mainGoalTarget = GetName(Data.ItemIDs, reader.ReadInt16(), "x4");
-                            break;
-                        default:
-                            data.mainGoalTarget = reader.ReadInt16().ToString("x4");
-                            break;
-                    }
+                    data.mainGoalTarget = GetGoals(data.mainGoalType, reader);
                     data.mainGoalCount = reader.ReadInt16();
                     data.subAGoalType = GetName(Data.Objectives, reader.ReadInt32(), "x8");
-                    switch (data.subAGoalType)
-                    {
-                        case "Hunt":
-                        case "Slay":
-                        case "Slay or Damage":
-                        case "Damage":
-                        case "Capture":
-                        case "Break Part":
-                            data.subAGoalTarget = GetName(Data.Monsters, reader.ReadByte(), "x2");
-                            reader.ReadByte();//Dead Space due to items being 2 bytes
-                            break;
-                        case "Deliver":
-                            data.subAGoalTarget = GetName(Data.ItemIDs, reader.ReadInt16(), "x4");
-                            break;
-                        default:
-                            data.subAGoalTarget = reader.ReadInt16().ToString("x4");
-                            break;
-                    }
+                    data.subAGoalTarget = GetGoals(data.subAGoalType, reader);
                     data.subAGoalCount = reader.ReadInt16();
                     data.subBGoalType = GetName(Data.Objectives, reader.ReadInt32(), "x8");
-                    switch (data.subBGoalType)
-                    {
-                        //Break Part
-                        case "Hunt":
-                        case "Slay":
-                        case "Slay or Damage":
-                        case "Damage":
-                        case "Capture":
-                        case "Break Part":
-                            data.subBGoalTarget = GetName(Data.Monsters, reader.ReadByte(), "x2");
-                            reader.ReadByte();//Dead Space due to items being 2 bytes
-                            break;
-                        case "Deliver":
-                            data.subBGoalTarget = GetName(Data.ItemIDs, reader.ReadInt16(), "x4");
-                            break;
-                        default:
-                            data.subBGoalTarget = reader.ReadInt16().ToString("x4");
-                            break;
-                    }
+                    data.subBGoalTarget = GetGoals(data.subBGoalType, reader);
                     data.subBGoalCount = reader.ReadInt16();
+                    //stream.Seek(2, SeekOrigin.Current);
+                    //data.hrj = reader.ReadByte();//HR to join???
+                    //stream.Seek(3, SeekOrigin.Current);
+                    //data.hrh = reader.ReadByte();//HR to host???, these 2 have an effect on that value but there's no correlation unless im missing something 
+                    //stream.Seek(92-7, SeekOrigin.Current);
                     stream.Seek(92, SeekOrigin.Current);
                     data.mainGRP = reader.ReadInt32();
                     data.subAGRP = reader.ReadInt32();
                     data.subBGRP = reader.ReadInt32();
-                    stream.Seek(144, SeekOrigin.Current);
+                    stream.Seek(20, SeekOrigin.Current);//Data in here
+                    stream.Seek(124, SeekOrigin.Current);//All empty bytes
                     data.title = StringFromPointer(reader);
                     data.textMain = StringFromPointer(reader);
                     data.textSubA = StringFromPointer(reader);
@@ -191,6 +146,30 @@ namespace FrontierDump
             if (!list.TryGetValue(id, out string name))
                 name = id.ToString(format);
             return name;
+        }
+
+        private static string GetGoals(string type, BinaryReader reader)
+        {
+            var target = "";
+            switch (type)
+            {
+                case "Hunt":
+                case "Slay":
+                case "Slay or Damage":
+                case "Damage":
+                case "Capture":
+                case "Break Part":
+                    target = GetName(Data.Monsters, reader.ReadByte(), "x2");
+                    reader.ReadByte();//Dead Space due to items being 2 bytes
+                    break;
+                case "Deliver":
+                    target = GetName(Data.ItemIDs, reader.ReadInt16(), "x4");
+                    break;
+                default:
+                    target = reader.ReadInt16().ToString("x4");
+                    break;
+            }
+            return target;
         }
 
         private static string StringFromPointer(BinaryReader reader)

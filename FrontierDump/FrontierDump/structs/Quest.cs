@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace FrontierDump.structs
+﻿namespace FrontierDump.structs
 {
     public class Quest
     {
@@ -17,20 +15,20 @@ namespace FrontierDump.structs
         public byte unk2 { get; set; }
         public byte unk3 { get; set; }
         public byte unk4 { get; set; }
-        public byte level { get; set; }
+        public string stars { get; set; }
         public byte unk5 { get; set; }
-        public byte courseType { get; set; } // 6 = Premium, 18 = Free?, 19 = HLC?, 20 = Extra
+        public byte courseType { get; set; } // 8 = Premium, 18 = Free?, 19 = HLC?, 20 = Extra
         public byte unk7 { get; set; }
         public byte unk8 { get; set; }
         public byte unk9 { get; set; }
         public byte unk10 { get; set; }
-        public byte unk11 { get; set; }
-        public Int32 fee { get; set; }
-        public Int32 zennyMain { get; set; }
-        public Int32 zennyKo { get; set; }
-        public Int32 zennySubA { get; set; }
-        public Int32 zennySubB { get; set; }
-        public Int32 time { get; set; }
+        public string pCap { get; set; }//Player Cap
+        public int fee { get; set; }
+        public int zennyMain { get; set; }
+        public int zennyKo { get; set; }
+        public int zennySubA { get; set; }
+        public int zennySubB { get; set; }
+        public int time { get; set; }
         public string map { get; set; }
         public byte unk13 { get; set; }
         public byte unk14 { get; set; }
@@ -38,19 +36,20 @@ namespace FrontierDump.structs
         public byte unk16 { get; set; }
         public byte unk17 { get; set; }
         public byte unk18 { get; set; }
-        public Int16 fileName { get; set; }
+        public int fileName { get; set; }
         public string mainGoalType { get; set; }
         public string mainGoalTarget { get; set; }
-        public Int16 mainGoalCount { get; set; }
+        public int mainGoalCount { get; set; }
         public string subAGoalType { get; set; }
         public string subAGoalTarget { get; set; }
-        public Int16 subAGoalCount { get; set; }
+        public int subAGoalCount { get; set; }
         public string subBGoalType { get; set; }
         public string subBGoalTarget { get; set; }
-        public Int16 subBGoalCount { get; set; }
-
-        public Int32 mainGRP { get; set; }
-        public Int32 subAGRP { get; set; }
-        public Int32 subBGRP { get; set; }
+        public int subBGoalCount { get; set; }
+        public int mainGRP { get; set; }
+        public int subAGRP { get; set; }
+        public int subBGRP { get; set; }
+        //public int hrh { get; set; }
+        //public int hrj { get; set; }
     }
 }
