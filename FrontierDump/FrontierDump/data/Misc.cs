@@ -11,6 +11,14 @@ namespace FrontierDump.data
             {2, "2 Player"},
             {3, "3 Player"},
         };
+        
+        public static Dictionary<int, string> Courses = new Dictionary<int, string>()
+        {
+            {8, "Premium"},
+            {18, "Free?"},
+            {19, "HLC?"},
+            {20, "Extra"},
+        };
 
         public static Dictionary<int, string> Objectives = new Dictionary<int, string>()
         {
